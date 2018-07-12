@@ -59,7 +59,7 @@ rho = [REVOLUTE REVOLUTE PRISMATIC REVOLUTE REVOLUTE REVOLUTE];
     % An is the 4x4 transform from end effector to base frame
     % R is a cell array, each cell is a 3x3 rotation from i to base frame
     % P is a cell array, each cell is a 3x1 vector from i to base frame
-    % Z is a cell arrat, each cell is a 3x3 rot. of k_hat_i to base frame
+    % Z is a cell array, each cell is a 3x3 rot. of k_hat_i to base frame
 [T, An, R, P, Z] = do_Forward_Kinematics(d_z, d_x, phi_x, phi_z, rho, q);
 
 plot_arm(P); 
