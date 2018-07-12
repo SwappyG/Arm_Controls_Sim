@@ -1,6 +1,0 @@
-function matrix = roty(phi)
-    % phi must be in radians
-    matrix = [cosd(phi)      0    sind(phi)    ;   ...
-              0              1     0           ;   ...
-              -sind(phi)     0    cosd(phi)    ]   ;
-end
