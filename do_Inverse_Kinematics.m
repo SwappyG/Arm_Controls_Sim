@@ -1,15 +1,21 @@
-function do_Inverse_Kinematics(robot, xyz_point)
+function q = do_Inverse_Kinematics(robot, point, pose)
 
     % Check array dimensions match
-    assert(class(robot) ~= 'arm', ...
-                'argument to this function must be of type "arm"');
-    assert(isvector(xyz_point) && length(xyz_point) == 3, ...
-                'Dimension of point mismatch');
+%     assert(class(robot) ~= 'arm', ...
+%                 'argument to this function must be of type "arm"');
+%     assert(isvector(xyz_point) && length(xyz_point) == 3, ...
+%                 'Dimension of point mismatch');
         
     d1 = robot.d_z(1);
     d2 = robot.d_z(2);
     d3 = robot.d_z(3);
-                  
+    d6 = robot.d_z(6);
+    
+    % Split problem into pos and orientation
+        % first 3DOF handles pos, wrist handles orientation
+    
+    target = point - pose*[0 0 d6]';
+    
     % It's much easier to work in spherical co-ordinates
         % [r=radius theta=polar_angle phi=azumithal_angle]
         % Define r as the distance from joint q1 target point
@@ -17,8 +23,8 @@ function do_Inverse_Kinematics(robot, xyz_point)
     
     % Co-ordinate frame defined at joint 2
         % Thus, height of d1 needs to be subtracted from target
-    xyz_point = xyz_point - [0 0 d1]';
-    [r, phi, theta] = cartesian_to_spherical(xyz_point);
+    target = target - [0 0 d1]';
+    [r, phi, theta] = cartesian_to_spherical(target);
          
     % r^2 = d2^2 + (d3+q3)^2;
     % Rearranging this:
@@ -48,13 +54,25 @@ function do_Inverse_Kinematics(robot, xyz_point)
     
     % Lastly, we just need to find alpha
         %   cos(alpha) = d2 / proj_r
-    alpha = acos( d2 / r*cos(phi) );
+    alpha = acos( d2 / (r*cos(phi)) );
         % cos(phi) > d2/r
         % No new equalities are create, this is same as the prev one
     
-    q1 = theta - (pi/2 - alpha); 
+    q1 = pi/2 - alpha + theta; %theta - (pi/2 - alpha); 
 
-    robot.Q(1:3) = [q1 q2 q3];
+    q = [q1 q2 q3];
+    robot.Q(1:3) = q;
+    do_Forward_Kinematics(robot);
+    
+    R6_3 = robot.R{4}' * pose;
+    
+    q5 = acos(R6_3(3,3));
+    q4 = atan2( R6_3(2,3) , R6_3(1,3) );
+    q6 = atan2( R6_3(3,2) , R6_3(3,1) );
+    
+    q = [q1 q2 q3 q4 q5 q6];
+    
+    robot.Q(:) = q;
     
         
 end

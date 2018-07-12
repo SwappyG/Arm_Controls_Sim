@@ -1,4 +1,4 @@
-function do_Forward_Kinematics(robot)
+function end_point = do_Forward_Kinematics(robot)
 
     if class(robot) ~= 'arm'
         error('argument to this function must be of type "arm"');
@@ -25,7 +25,7 @@ function do_Forward_Kinematics(robot)
     end
 
     robot.An = An;
-    
+    end_point = robot.P{end};
 end
 
 

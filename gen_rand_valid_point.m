@@ -7,18 +7,29 @@ function point = gen_rand_valid_point(robot)
     d3 = robot.d_z(3);
     q3max = robot.q_max(3);
     
-    xy_sq = THRES * (d3+q3max)^2 *rand() + d2^2;
+    L_max = sqrt( (d3+q3max)^2 + d2^2 );
+    L_min = sqrt( d3^2 + d2^2 );
+    L = (L_max-L_min)*rand() + L_min;
 
     theta = pi*rand() - pi/2;
     
-    x = sqrt(xy_sq) * cos(theta);
-    y = sqrt(xy_sq) * sin(theta);
+    x = L * cos(theta);
+    y = L * sin(theta);
     
-    z_d1 = THRES * (d3+q3max)^2 *rand() + d2^2 + d3^2 - xy_sq;
+    z_min = sqrt(L_min^2 - x^2 - y^2) + d1;
     
-    z = sqrt(z_d1)+d1;
-    z = z*sign(rand()-0.5);
+    if ~isreal(z_min)
+        z_min = d1;
+    end
+    
+    z_max = sqrt(L_max^2 - x^2 - y^2) + d1;
+    
+    z = THRES * (z_max-z_min) * rand() + z_min;
+
 
     point = [x y z]';
+    
+    
+    [L z_min z_max]
     
 end
