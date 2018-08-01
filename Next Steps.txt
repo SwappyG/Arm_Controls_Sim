@@ -1,0 +1,10 @@
+- Model an RRR arm
+- Add inertia tensors for each link
+
+- Find jacobians for C.M. of each link
+- Calculate the inertia matrix D(q)
+- Calculate the Christoffel symbols Cijk(q)
+- Calculate the phi_k dPE/dq_k for each joint
+- Calculate the Euler-Legrange Equations
+
+- Convert Euler-Legrange equations to non-linear state-space eqs
