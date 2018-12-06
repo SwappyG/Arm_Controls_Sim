@@ -1,0 +1,6 @@
+function matrix = rotz(phi)
+    % phi must be in radians
+    matrix = [cos(phi)  -sin(phi)   0 ;   ...
+              sin(phi)  cos(phi)    0 ;   ...
+              0         0           1    ]   ;
+end
